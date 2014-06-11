@@ -3,8 +3,8 @@ go-base91
 
 This is a work-in-progress implementaiton of Base91 encoding for Go.
 
-Example Usage
--------------
+Example
+-------
 	package main
 	
 	import (
