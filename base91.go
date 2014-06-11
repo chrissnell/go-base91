@@ -3,6 +3,7 @@ package base91
 
 import (
 	"bytes"
+	"errors"
 	"io"
 	"strconv"
 	"strings"
@@ -132,16 +133,11 @@ func (enc *Encoding) decode(dst, src []byte) (num int, err error) {
 	var c, outpos int = 0, 0
 	var n uint64 = 0
 
-	decodemap := make(map[rune]int)
+	for spos, char := range string(src) {
 
-	for pos, char := range encodeStd {
-		decodemap[char] = pos
-	}
-
-	for _, char := range string(src) {
-
-		if strings.Contains(encodeStd, string(char)) {
-			c = decodemap[char]
+		c = strings.IndexRune(encodeStd, char)
+		if c < 0 {
+			return spos, errors.New("Invalid character in input " + string(char) + " at position " + string(spos))
 		}
 
 		if v < 0 {
