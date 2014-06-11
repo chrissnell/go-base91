@@ -1,7 +1,7 @@
 go-base91
 =========
 
-This is a work-in-progress implementaiton of Base91 encoding for Go.
+This is an implementaiton of Base91 encoding for Go.  It is functional but it's a work in progress.  Error handling needs to be improved and there are many optimizations to be made.
 
 Example
 -------
