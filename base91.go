@@ -40,9 +40,9 @@ var removeNewlinesMapper = func(r rune) rune {
 	return r
 }
 
-func (enc *Encoding) Encode(dst, src []byte) {
+func (enc *Encoding) Encode(dst, src []byte) int {
 	if len(src) == 0 {
-		return
+		return 0
 	}
 
 	var n, b, v uint64 = 0, 0, 0
@@ -76,17 +76,20 @@ func (enc *Encoding) Encode(dst, src []byte) {
 
 	if n > 0 {
 		dst[pos] = enc.encode[b%91]
+		pos++
 		if n > 7 || b > 90 {
 			dst[pos] = enc.encode[b/91]
+			pos++
 		}
 	}
+	return pos
 }
 
 // EncodeToString returns the base91 encoding of src.
 func (enc *Encoding) EncodeToString(src []byte) string {
 	buf := make([]byte, len(src)*2, (len(src) * 2))
-	enc.Encode(buf, src)
-	return string(buf)
+	n := enc.Encode(buf, src)
+	return string(buf[:n])
 }
 
 type encoder struct {
@@ -167,7 +170,7 @@ func (enc *Encoding) decode(dst, src []byte) (num int, err error) {
 		outpos++
 	}
 
-	return len(dst), nil
+	return outpos, nil
 }
 
 // Decode decodes src using the encoding enc.  It writes at most
